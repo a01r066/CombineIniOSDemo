@@ -17,11 +17,127 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        // Part I
-//        publishersAndSubscribers()
+        // Part I - Publishers and Subscribers
+        publishersAndSubscribers()
         
-        // Part II
+        // Part II - Transforming and Filtering with operators
         transformingAndFilteringOperators()
+    }
+    
+    /// Part I - Publishers and Subscribers
+    func publishersAndSubscribers(){
+        Helper.example(of: "publisher") {
+            let center = NotificationCenter.default
+            let myNotification = NSNotification.Name("myNotification")
+
+            let publisher = center.publisher(for: myNotification, object: nil)
+            let subscription = publisher
+                .print()
+                .sink { _ in
+                print("Notification received from a publisher!")
+            }
+
+            center.post(name: myNotification, object: nil)
+            subscription.cancel()
+        }
+
+        Helper.example(of: "just Publisher") {
+            let just = Just("Hello, World")
+            just.sink {
+                print("Received complete \($0)")
+            } receiveValue: {
+                print("Received value: \($0)")
+            }
+            .store(in: &self.subscriptions)
+        }
+
+        Helper.example(of: "assign(to:on:)") {
+            class SomeObject {
+                var value: String = "" {
+                    didSet {
+                        print(value)
+                    }
+                }
+            }
+
+            let object = SomeObject()
+            ["Hello", "World"]
+                .publisher
+                .assign(to: \.value, on: object)
+                .store(in: &self.subscriptions)
+        }
+
+        Helper.example(of: "PassThroughSubject") {
+            let subject = PassthroughSubject<String, Never>()
+            subject.sink { print($0) }
+            .store(in: &self.subscriptions)
+
+            subject.send("Hello")
+            subject.send("World")
+            subject.send(completion: .finished)
+            subject.send("Still there?")
+        }
+
+        Helper.example(of: "CurrentValueSubject") {
+            let subject = CurrentValueSubject<Int, Never>(0)
+
+            subject
+                .print()
+                .sink(receiveValue: { print($0) })
+                .store(in: &self.subscriptions)
+
+            print(subject.value)
+
+            subject.send(1)
+            subject.send(2)
+
+            print(subject.value)
+            subject.send(completion: .finished)
+        }
+
+        Helper.example(of: "Type erasure") {
+            let subject = PassthroughSubject<Int, Never>()
+            let publisher = subject.eraseToAnyPublisher()
+
+            publisher.sink(receiveValue: { print($0) })
+                .store(in: &self.subscriptions)
+
+            subject.send(1)
+        }
+        
+        // Challenge
+        Helper.example(of: "Create a Blackjack card dealer") {
+            self.dealtHand
+                .sink(receiveCompletion: {
+                if case let .failure(error) = $0 {
+                    print(error)
+                }
+            }, receiveValue: { hand in
+                print("\(hand.cardString) for \(hand.points) points.")
+            })
+                .store(in: &self.subscriptions)
+            self.deal(3)
+        }
+    }
+    
+    func deal(_ cardCount: UInt){
+        var deck = cards
+        var cardRemaining = 52
+        var hand = Hand()
+        
+        for _ in 0..<cardCount {
+            let randomIndex = Int.random(in: 0..<cardRemaining)
+            hand.append(deck[randomIndex])
+            deck.remove(at: randomIndex)
+            cardRemaining -= 1
+        }
+        
+        // Add code to update dealtHand here
+        if(hand.points > 21){
+            dealtHand.send(completion: .failure(.busted))
+        } else {
+            dealtHand.send(hand)
+        }
     }
     
     
@@ -145,120 +261,64 @@ class ViewController: UIViewController {
                 .sink(receiveCompletion: { print("Complete with ", $0) }, receiveValue: { print($0) })
                 .store(in: &self.subscriptions)
         }
-    }
-    
-    func publishersAndSubscribers(){
-        Helper.example(of: "publisher") {
-            let center = NotificationCenter.default
-            let myNotification = NSNotification.Name("myNotification")
-
-            let publisher = center.publisher(for: myNotification, object: nil)
-            let subscription = publisher
-                .print()
-                .sink { _ in
-                print("Notification received from a publisher!")
-            }
-
-            center.post(name: myNotification, object: nil)
-            subscription.cancel()
-        }
-
-        Helper.example(of: "just Publisher") {
-            let just = Just("Hello, World")
-            just.sink {
-                print("Received complete \($0)")
-            } receiveValue: {
-                print("Received value: \($0)")
-            }
-            .store(in: &self.subscriptions)
-        }
-
-        Helper.example(of: "assign(to:on:)") {
-            class SomeObject {
-                var value: String = "" {
-                    didSet {
-                        print(value)
-                    }
-                }
-            }
-
-            let object = SomeObject()
-            ["Hello", "World"]
-                .publisher
-                .assign(to: \.value, on: object)
+        
+        Helper.example(of: "first(where:)") {
+            let numbers = (1...9).publisher
+            numbers
+                .first(where: { $0 % 2 == 0 }) // Finds the first value satisfy to a predicate, and is lazy
+                .sink(receiveCompletion: { print("Complete with \($0)") }, receiveValue: { print($0) })
                 .store(in: &self.subscriptions)
         }
-
-        Helper.example(of: "PassThroughSubject") {
-            let subject = PassthroughSubject<String, Never>()
-            subject.sink { print($0) }
-            .store(in: &self.subscriptions)
-
-            subject.send("Hello")
-            subject.send("World")
-            subject.send(completion: .finished)
-            subject.send("Still there?")
+        
+        Helper.example(of: "last(where:)") {
+            let numbers = (1...9).publisher
+            numbers
+                .last(where: { $0 % 2 == 0 }) // Finds the last value satisfy to a predicate, and is greedy
+                .sink(receiveCompletion: { print("Complete with \($0)") }, receiveValue: { print($0) })
+                .store(in: &self.subscriptions)
         }
-
-        Helper.example(of: "CurrentValueSubject") {
-            let subject = CurrentValueSubject<Int, Never>(0)
-
-            subject
-                .print()
+        
+        Helper.example(of: "last(where:)") {
+            let numbers = PassthroughSubject<Int, Never>()
+            
+            numbers
+                .last(where: { $0 % 2 == 0 })
+                .sink(receiveCompletion: { print("Complete with \($0)") }, receiveValue: { print($0) })
+                .store(in: &self.subscriptions)
+            
+            numbers.send(1)
+            numbers.send(2)
+            numbers.send(3)
+            numbers.send(4)
+            numbers.send(5)
+            numbers.send(completion: .finished)
+        }
+        
+        Helper.example(of: "prefix") {
+            let numbers = (0...10).publisher
+            numbers.prefix(2) // Takes values from the publisher before the subscription is cancelled
+                .sink(receiveCompletion: { print("Complte with \($0)") }, receiveValue: { print($0) })
+                .store(in: &self.subscriptions)
+        }
+        
+        Helper.example(of: "drop(while:)") {
+            let numbers = (1...10).publisher
+            numbers.drop(while: { $0 % 5 != 0 }) // Ignores values from the publisher before the subscription is cancelled
                 .sink(receiveValue: { print($0) })
                 .store(in: &self.subscriptions)
-
-            print(subject.value)
-
-            subject.send(1)
-            subject.send(2)
-
-            print(subject.value)
-            subject.send(completion: .finished)
-        }
-
-        Helper.example(of: "Type erasure") {
-            let subject = PassthroughSubject<Int, Never>()
-            let publisher = subject.eraseToAnyPublisher()
-
-            publisher.sink(receiveValue: { print($0) })
-                .store(in: &self.subscriptions)
-
-            subject.send(1)
         }
         
         // Challenge
-        Helper.example(of: "Create a Blackjack card dealer") {
-            self.dealtHand
-                .sink(receiveCompletion: {
-                if case let .failure(error) = $0 {
-                    print(error)
-                }
-            }, receiveValue: { hand in
-                print("\(hand.cardString) for \(hand.points) points.")
-            })
+        Helper.example(of: "Challenge - Transforming & Filtering") {
+            let numbers = (1...100).publisher
+            
+            numbers
+//                .drop(while: { $0 % 50 != 0 })
+                .dropFirst(50)
+                .prefix(20)
+                .filter { $0 % 2 == 0 }
+                .sink(receiveCompletion: { print($0) }, receiveValue: { print($0) })
                 .store(in: &self.subscriptions)
-            self.deal(3)
-        }
-    }
-    
-    func deal(_ cardCount: UInt){
-        var deck = cards
-        var cardRemaining = 52
-        var hand = Hand()
-        
-        for _ in 0..<cardCount {
-            let randomIndex = Int.random(in: 0..<cardRemaining)
-            hand.append(deck[randomIndex])
-            deck.remove(at: randomIndex)
-            cardRemaining -= 1
-        }
-        
-        // Add code to update dealtHand here
-        if(hand.points > 21){
-            dealtHand.send(completion: .failure(.busted))
-        } else {
-            dealtHand.send(hand)
         }
     }
 }
