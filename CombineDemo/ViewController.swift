@@ -22,6 +22,9 @@ class ViewController: UIViewController {
         
         // Part II - Transforming and Filtering with operators
         transformingAndFilteringOperators()
+        
+        // Part III - Combining Operators
+        combiningOperators()
     }
     
     /// Part I - Publishers and Subscribers
@@ -318,6 +321,210 @@ class ViewController: UIViewController {
                 .prefix(20)
                 .filter { $0 % 2 == 0 }
                 .sink(receiveCompletion: { print($0) }, receiveValue: { print($0) })
+                .store(in: &self.subscriptions)
+        }
+    }
+    
+    
+    /// Part III - Combining Operators
+    func combiningOperators(){
+        Helper.example(of: "prepend(output)") {
+            let publisher = [3,4].publisher
+            publisher
+                .prepend(1, 2) // Works on variadic list of values and prepends that list onto the original publisher
+                .prepend(-1, 0)
+                .sink(receiveValue: { print($0) })
+                .store(in: &self.subscriptions)
+        }
+        
+        Helper.example(of: "prepend(sequence)") {
+            let publisher = [5, 6, 7].publisher
+            publisher
+                .prepend([3, 4]) // Works on a object that conforms the Sequence protocol
+                .prepend(Set(1...2))
+                .prepend(stride(from: 6, through: 11, by: 2))
+                .sink(receiveValue: { print($0) })
+                .store(in: &self.subscriptions)
+        }
+        
+        Helper.example(of: "prepend(publisher)") {
+            let publisher1 = [3, 4].publisher
+            let publisher2 = [1, 2].publisher
+            
+            publisher1
+                .prepend(publisher2) // Prepends all values from the passed in publisher onto the original publisher
+                .sink(receiveValue: { print($0) })
+                .store(in: &self.subscriptions)
+        }
+        
+        Helper.example(of: "prepend(publisher) #2") {
+            let publisher1 = [3, 4].publisher
+            let publisher2 = PassthroughSubject<Int, Never>()
+            
+            publisher1
+                .prepend(publisher2) // The passed in publisher must send a completion event so the original publisher can start emitting its values
+                .sink(receiveValue: { print($0) })
+                .store(in: &self.subscriptions)
+            
+            publisher2.send(1)
+            publisher2.send(2)
+            publisher2.send(completion: .finished)
+        }
+        
+        Helper.example(of: "append(output:") {
+            let numbers = [1]
+                .publisher
+            numbers.append(2, 3) // Works on a variadic list
+                .append(4)
+                .sink(receiveValue: { print($0) })
+                .store(in: &self.subscriptions)
+        }
+        
+        Helper.example(of: "append(output) #2") {
+            let publisher = PassthroughSubject<Int, Never>()
+            publisher.append(3, 4)
+                .append(5).sink(receiveValue: { print($0) }).store(in: &self.subscriptions)
+            
+            publisher.send(1)
+            publisher.send(2)
+            publisher.send(completion: .finished)
+        }
+        
+        Helper.example(of: "append(sequence)") {
+            let numbers = [1, 2].publisher
+            numbers.append(Set(3...5)) // Works on a Sequence conforming collection of values
+                .append(Set([6,7]))
+                .append(stride(from: 8, through: 15, by: 2))
+                .sink(receiveValue: { print($0) })
+                .store(in: &self.subscriptions)
+        }
+        
+        Helper.example(of: "append(publisher)") {
+            let publisher1 = [1, 2].publisher
+            let publisher2 = [3, 4].publisher
+            
+            publisher1
+                .append(publisher2) // Appends the entries set of the passed in publisher after original publisher has completed
+                .sink(receiveValue: { print($0) })
+                .store(in: &self.subscriptions)
+        }
+        
+        Helper.example(of: "Challenge: Making Phone Numbers") {
+            let phoneNumbersPublisher = ["123-4567"].publisher
+            let areaCode = "410"
+            let phoneExtension = "901"
+            
+            phoneNumbersPublisher
+                .prepend("1-", areaCode, "-")
+                .append(" EXT ", phoneExtension)
+                .collect()
+//                .map { $0.joined() }
+                .sink(receiveValue: { print($0.joined()) })
+                .store(in: &self.subscriptions)
+        }
+        
+        Helper.example(of: "switchToLatest") {
+            let publisher1 = PassthroughSubject<Int, Never>()
+            let publisher2 = PassthroughSubject<Int, Never>()
+            let publisher3 = PassthroughSubject<Int, Never>()
+            
+            let publishers = PassthroughSubject<PassthroughSubject<Int, Never>, Never>()
+            
+            publishers
+                .switchToLatest()
+                .sink(receiveCompletion: { _ in print("Completed!") }, receiveValue: { print($0) })
+                .store(in: &self.subscriptions)
+            
+            publishers.send(publisher1)
+            publisher1.send(1)
+            publisher1.send(2)
+            publishers.send(publisher2)
+            publisher1.send(3)
+            publisher2.send(4)
+            publisher2.send(5)
+            publishers.send(publisher3)
+            publisher2.send(6)
+            publisher3.send(7)
+            publisher3.send(8)
+            
+            publisher3.send(completion: .finished)
+            publishers.send(completion: .finished)
+        }
+        
+        Helper.example(of: "merge(with:)") {
+            let publisher1 = PassthroughSubject<Int, Never>()
+            let publisher2 = PassthroughSubject<Int, Never>()
+            
+            publisher1
+                .merge(with: publisher2).sink { _ in
+                print("Completed!")
+            } receiveValue: { print($0) }
+            .store(in: &self.subscriptions)
+            
+            publisher1.send(1)
+            publisher1.send(2)
+            publisher2.send(3)
+            publisher1.send(4)
+            publisher2.send(5)
+            
+            publisher1.send(completion: .finished)
+            publisher2.send(completion: .finished)
+        }
+        
+        Helper.example(of: "combineLatest") {
+            let publisher1 = PassthroughSubject<Int, Never>()
+            let publisher2 = PassthroughSubject<String, Never>()
+            
+            publisher1.combineLatest(publisher2)
+                .sink { _ in
+                print("Completed!")
+            } receiveValue: { print($0) }
+            .store(in: &self.subscriptions)
+            
+            publisher1.send(1)
+            publisher1.send(2)
+            publisher2.send("a")
+            publisher2.send("b")
+            publisher1.send(3)
+            publisher2.send("c")
+            
+            publisher1.send(completion: .finished)
+            publisher2.send(completion: .finished)
+        }
+        
+        Helper.example(of: "zip") {
+            let publisher1 = PassthroughSubject<Int, Never>()
+            let publisher2 = PassthroughSubject<String, Never>()
+            
+            publisher1.zip(publisher2).sink { _ in
+                print("Completed!")
+            } receiveValue: { print($0) }.store(in: &self.subscriptions)
+            
+            publisher1.send(1)
+            publisher1.send(2)
+            publisher2.send("a")
+            publisher2.send("b")
+            publisher1.send(3)
+            publisher2.send("c")
+            publisher2.send("d")
+            
+            publisher1.send(completion: .finished)
+            publisher2.send(completion: .finished)
+        }
+        
+        Helper.example(of: "Challenge: Making Phone Numbers Part 2") {
+            let phoneNumbersPublisher = ["123-4567", "555-1212", "555-1111", "123-6789"].publisher
+            let areaCodePublisher = ["410", "757", "800", "540"].publisher
+            let phoneExtensionPublisher = ["EXT 901", "EXT 523", "EXT 137", "EXT 100"].publisher
+            
+            areaCodePublisher
+                .zip(phoneNumbersPublisher)
+                .map { $0 + "-" + $1 }
+                .zip(phoneExtensionPublisher)
+                .map { $0 + " " + $1 }
+                .sink { _ in
+                    print("Completed!")
+                } receiveValue: { print($0) }
                 .store(in: &self.subscriptions)
         }
     }
