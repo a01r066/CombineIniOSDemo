@@ -17,6 +17,7 @@
 		7036DB532715213700D7A196 /* Chatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7036DB522715213700D7A196 /* Chatter.swift */; };
 		7078B0F72717C138006A377F /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7078B0F62717C138006A377F /* Todo.swift */; };
 		7078B0F92717C198006A377F /* IntermediateCombineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7078B0F82717C198006A377F /* IntermediateCombineViewController.swift */; };
+		7078B0FD2717F4E3006A377F /* PhotoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7078B0FC2717F4E3006A377F /* PhotoService.swift */; };
 		70AA55C727140075004545E1 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AA55C627140075004545E1 /* Helper.swift */; };
 		70AA55CA271426EE004545E1 /* BlackJack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AA55C9271426EE004545E1 /* BlackJack.swift */; };
 /* End PBXBuildFile section */
@@ -34,6 +35,7 @@
 		7036DB522715213700D7A196 /* Chatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chatter.swift; sourceTree = "<group>"; };
 		7078B0F62717C138006A377F /* Todo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
 		7078B0F82717C198006A377F /* IntermediateCombineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntermediateCombineViewController.swift; sourceTree = "<group>"; };
+		7078B0FC2717F4E3006A377F /* PhotoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoService.swift; sourceTree = "<group>"; };
 		70AA55C627140075004545E1 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		70AA55C9271426EE004545E1 /* BlackJack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlackJack.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -68,6 +70,7 @@
 		701FF6062713FB3200C21A84 /* CombineDemo */ = {
 			isa = PBXGroup;
 			children = (
+				7078B0FB2717F4CE006A377F /* Services */,
 				7078B0FA2717C19F006A377F /* Controllers */,
 				70AA55C8271426E0004545E1 /* Models */,
 				701FF6072713FB3200C21A84 /* AppDelegate.swift */,
@@ -88,6 +91,14 @@
 				7078B0F82717C198006A377F /* IntermediateCombineViewController.swift */,
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		7078B0FB2717F4CE006A377F /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				7078B0FC2717F4E3006A377F /* PhotoService.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		70AA55C8271426E0004545E1 /* Models */ = {
@@ -117,6 +128,8 @@
 			dependencies = (
 			);
 			name = CombineDemo;
+			packageProductDependencies = (
+			);
 			productName = CombineDemo;
 			productReference = 701FF6042713FB3200C21A84 /* CombineDemo.app */;
 			productType = "com.apple.product-type.application";
@@ -145,6 +158,8 @@
 				Base,
 			);
 			mainGroup = 701FF5FB2713FB3200C21A84;
+			packageReferences = (
+			);
 			productRefGroup = 701FF6052713FB3200C21A84 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -172,6 +187,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7078B0FD2717F4E3006A377F /* PhotoService.swift in Sources */,
 				701FF60C2713FB3200C21A84 /* BasicCombineController.swift in Sources */,
 				70107FCF27152E0A00B7C2F7 /* PhoneNumber.swift in Sources */,
 				701FF6082713FB3200C21A84 /* AppDelegate.swift in Sources */,
@@ -330,6 +346,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 2PGDWKPY7G;
+				EXCLUDED_ARCHS = arm64;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CombineDemo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -359,6 +376,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 2PGDWKPY7G;
+				EXCLUDED_ARCHS = arm64;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CombineDemo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
