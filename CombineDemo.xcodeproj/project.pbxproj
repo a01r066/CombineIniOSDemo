@@ -10,11 +10,13 @@
 		70107FCF27152E0A00B7C2F7 /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70107FCE27152E0A00B7C2F7 /* PhoneNumber.swift */; };
 		701FF6082713FB3200C21A84 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701FF6072713FB3200C21A84 /* AppDelegate.swift */; };
 		701FF60A2713FB3200C21A84 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701FF6092713FB3200C21A84 /* SceneDelegate.swift */; };
-		701FF60C2713FB3200C21A84 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701FF60B2713FB3200C21A84 /* ViewController.swift */; };
+		701FF60C2713FB3200C21A84 /* BasicCombineController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701FF60B2713FB3200C21A84 /* BasicCombineController.swift */; };
 		701FF60F2713FB3200C21A84 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 701FF60D2713FB3200C21A84 /* Main.storyboard */; };
 		701FF6112713FB3300C21A84 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 701FF6102713FB3300C21A84 /* Assets.xcassets */; };
 		701FF6142713FB3300C21A84 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 701FF6122713FB3300C21A84 /* LaunchScreen.storyboard */; };
 		7036DB532715213700D7A196 /* Chatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7036DB522715213700D7A196 /* Chatter.swift */; };
+		7078B0F72717C138006A377F /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7078B0F62717C138006A377F /* Todo.swift */; };
+		7078B0F92717C198006A377F /* IntermediateCombineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7078B0F82717C198006A377F /* IntermediateCombineViewController.swift */; };
 		70AA55C727140075004545E1 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AA55C627140075004545E1 /* Helper.swift */; };
 		70AA55CA271426EE004545E1 /* BlackJack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AA55C9271426EE004545E1 /* BlackJack.swift */; };
 /* End PBXBuildFile section */
@@ -24,12 +26,14 @@
 		701FF6042713FB3200C21A84 /* CombineDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CombineDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		701FF6072713FB3200C21A84 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		701FF6092713FB3200C21A84 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		701FF60B2713FB3200C21A84 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		701FF60B2713FB3200C21A84 /* BasicCombineController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicCombineController.swift; sourceTree = "<group>"; };
 		701FF60E2713FB3200C21A84 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		701FF6102713FB3300C21A84 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		701FF6132713FB3300C21A84 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		701FF6152713FB3300C21A84 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7036DB522715213700D7A196 /* Chatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chatter.swift; sourceTree = "<group>"; };
+		7078B0F62717C138006A377F /* Todo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
+		7078B0F82717C198006A377F /* IntermediateCombineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntermediateCombineViewController.swift; sourceTree = "<group>"; };
 		70AA55C627140075004545E1 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		70AA55C9271426EE004545E1 /* BlackJack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlackJack.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -64,10 +68,10 @@
 		701FF6062713FB3200C21A84 /* CombineDemo */ = {
 			isa = PBXGroup;
 			children = (
+				7078B0FA2717C19F006A377F /* Controllers */,
 				70AA55C8271426E0004545E1 /* Models */,
 				701FF6072713FB3200C21A84 /* AppDelegate.swift */,
 				701FF6092713FB3200C21A84 /* SceneDelegate.swift */,
-				701FF60B2713FB3200C21A84 /* ViewController.swift */,
 				701FF60D2713FB3200C21A84 /* Main.storyboard */,
 				701FF6102713FB3300C21A84 /* Assets.xcassets */,
 				701FF6122713FB3300C21A84 /* LaunchScreen.storyboard */,
@@ -77,12 +81,22 @@
 			path = CombineDemo;
 			sourceTree = "<group>";
 		};
+		7078B0FA2717C19F006A377F /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				701FF60B2713FB3200C21A84 /* BasicCombineController.swift */,
+				7078B0F82717C198006A377F /* IntermediateCombineViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
 		70AA55C8271426E0004545E1 /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				70AA55C9271426EE004545E1 /* BlackJack.swift */,
 				7036DB522715213700D7A196 /* Chatter.swift */,
 				70107FCE27152E0A00B7C2F7 /* PhoneNumber.swift */,
+				7078B0F62717C138006A377F /* Todo.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -158,11 +172,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				701FF60C2713FB3200C21A84 /* ViewController.swift in Sources */,
+				701FF60C2713FB3200C21A84 /* BasicCombineController.swift in Sources */,
 				70107FCF27152E0A00B7C2F7 /* PhoneNumber.swift in Sources */,
 				701FF6082713FB3200C21A84 /* AppDelegate.swift in Sources */,
+				7078B0F72717C138006A377F /* Todo.swift in Sources */,
 				701FF60A2713FB3200C21A84 /* SceneDelegate.swift in Sources */,
 				70AA55C727140075004545E1 /* Helper.swift in Sources */,
+				7078B0F92717C198006A377F /* IntermediateCombineViewController.swift in Sources */,
 				70AA55CA271426EE004545E1 /* BlackJack.swift in Sources */,
 				7036DB532715213700D7A196 /* Chatter.swift in Sources */,
 			);

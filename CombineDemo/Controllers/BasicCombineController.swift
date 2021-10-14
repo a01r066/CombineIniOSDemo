@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  SampleController.swift
 //  CombineDemo
 //
 //  Created by Thanh Minh on 11/10/2021.
@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-class ViewController: UIViewController {
+class BasicCombineController: UIViewController {
     
     var subscriptions: Set<AnyCancellable> = []
     let dealtHand = PassthroughSubject<Hand, HandError>()
@@ -352,7 +352,7 @@ class ViewController: UIViewController {
             let publisher2 = [1, 2].publisher
             
             publisher1
-                .prepend(publisher2) // Prepends all values from the passed in publisher onto the original publisher
+                .prepend(publisher2) // Prepend the values from a publisher before the original publisher
                 .sink(receiveValue: { print($0) })
                 .store(in: &self.subscriptions)
         }
@@ -374,7 +374,7 @@ class ViewController: UIViewController {
         Helper.example(of: "append(output:") {
             let numbers = [1]
                 .publisher
-            numbers.append(2, 3) // Works on a variadic list
+            numbers.append(2, 3) // Append the values from a publisher after the original publisher completes
                 .append(4)
                 .sink(receiveValue: { print($0) })
                 .store(in: &self.subscriptions)
